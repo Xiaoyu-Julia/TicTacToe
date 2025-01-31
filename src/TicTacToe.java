@@ -1,14 +1,14 @@
 import java.util.Objects;
+import java.util.Scanner;
 
 public class TicTacToe {
     public static final char EMPTY = ' ';
     //declare variables and create the instances using the new operator
     int size = 3;
     Cell[][] board = new Cell[size][size];
-    Player player1 = new HumainPlayer('O');
-    Player player2 = new HumainPlayer('X');
-    Player player3 = new ArtificialPlayer('O');
-    Player player4 = new ArtificialPlayer('X');
+    Player firstPlayer;
+    Player secondPlayer;
+    Player currentPlayer;
 
     /**
      * TicTacToe game board
@@ -70,20 +70,23 @@ public class TicTacToe {
      * A function : put the pawn on the game board according to the line and column chosen by the current player
      */
     public void putTokenOnBoard(Cell move) {
-        //board[move.row][move.col].setValue(move.getValue());
-        board[move.row][move.col] = move;
+        board[move.row][move.col].setValue(move.getValue());
+        //board[move.row][move.col] = move;
     }
 
     // play the game
     public void play() {
         showBoard();
-        Player currentPlayer = player1;
+        //getChoicePlayer();
+        setSymbolToPlayerChoice();
+        /* change the player */
+        currentPlayer = secondPlayer;
 
         do {
             playTokenOnBoard(currentPlayer);
             showBoard();
 
-            currentPlayer = (currentPlayer == player1) ? player2 : player1;
+            currentPlayer = (currentPlayer == firstPlayer) ? secondPlayer : firstPlayer;
 
         } while (!hasWinner() && !isCaseFull());
 
@@ -91,6 +94,30 @@ public class TicTacToe {
         if (startGame) {
             System.out.println("The game is over.");
         }
+    }
+    // A function to choose players : two humans players, tow artificial players, or one human player and one artificial player
+
+    public void setSymbolToPlayerChoice () {
+        Scanner inputPlayerChoice = new Scanner(System.in);
+        System.out.println("You can enter 1 for an artificial Player, or 2 for a human Player.");
+        System.out.println("Choose the first player");
+        int firstPlayerChoice = inputPlayerChoice.nextInt();
+        System.out.println("Choose the second player");
+        int secondPlayerChoice = inputPlayerChoice.nextInt();
+
+        // choose the type of first player and set a symbol
+            if (firstPlayerChoice == 1) {
+                firstPlayer = new ArtificialPlayer('O');
+            }else{
+                firstPlayer = new HumanPlayer('0');
+            }
+
+            if (secondPlayerChoice == 2) {
+                secondPlayer = new HumanPlayer('x');
+            }else{
+                secondPlayer = new ArtificialPlayer('X');
+            }
+
     }
 
     /**
@@ -120,17 +147,17 @@ public class TicTacToe {
         int nbLines = testBoard.length;
         while (!isWinner && row < nbLines) {
             // initialize a counter
-            int count = 1;
+            int countSameSymbol = 1;
             int col = 1;
             Cell[] line = testBoard[row];
             while (col < line.length && line[col] != null && !isWinner) {
                 // compare the 2 consecutive cell int the game board and check if they have the same pawn
                 if (/*line[col].getValue() != EMPTY ||*/ !Objects.equals(line[col].getValue(), line[col - 1].getValue())) {
-                    count = 1;
+                    countSameSymbol = 1;
                 } else {
-                    count++;
+                    countSameSymbol++;
                 }
-                if (count == nbSymbol && line[col].isOccupied()) {
+                if (countSameSymbol == nbSymbol && line[col].isOccupied()) {
                     isWinner = true;
                 }
                 col++;

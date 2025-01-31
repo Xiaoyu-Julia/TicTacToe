@@ -1,8 +1,8 @@
 import java.util.Scanner;
 
-public class HumainPlayer extends Player {
+public class HumanPlayer extends Player {
 
-    HumainPlayer(char symbol) {
+    HumanPlayer(char symbol) {
         super(symbol);
     }
 
