@@ -7,6 +7,8 @@ public class TicTacToe {
     Cell[][] board = new Cell[size][size];
     Player player1 = new HumainPlayer('O');
     Player player2 = new HumainPlayer('X');
+    Player player3 = new ArtificialPlayer('O');
+    Player player4 = new ArtificialPlayer('X');
 
     /**
      * TicTacToe game board
