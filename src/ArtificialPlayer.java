@@ -9,7 +9,7 @@ public class ArtificialPlayer extends Player {
     @Override
 
     public Cell makeMove(Cell[][] board) {
-        Random rand = new Random();
+        //Random random = new Random();
         int randomRow = new Random().nextInt(0, board.length);
         int randomCol = new Random().nextInt(0, board[0].length);
 

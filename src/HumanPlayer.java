@@ -1,41 +1,23 @@
-import java.util.Scanner;
 
 public class HumanPlayer extends Player {
+    InteractionUser tictactoeUser;
+
 
     HumanPlayer(char symbol) {
-        super(symbol);
+        super(symbol); // access attribute défined in the parent class
+        tictactoeUser = new InteractionUser();
     }
 
 
     @Override
     public Cell makeMove(Cell[][] board) {
-
+        // row and column entries
         int row, col;
-        row = getUserInput("line");
-        col = getUserInput("column");
+        row = tictactoeUser.getUserInput("line");
+        col = tictactoeUser.getUserInput("column");
 
         return new Cell(row, col, symbol);
 
     }
 
-    /**
-     * A function to get the user's choice of line and column
-     *
-     * @param str Choose line or column
-     */
-    private int getUserInput(String str) {
-        Scanner input = new Scanner(System.in);
-        int row;
-        System.out.print("Please choose one " + str + " : ");
-        while (!input.hasNextInt()) {
-            System.out.print("This is not a number, please try again: ");
-            input.nextLine(); // vidage saisie incorrect
-        }
-        row = input.nextInt();
-        return row;
-    }
-
-    public char getSymbol() {
-        return symbol;
-    }
 }

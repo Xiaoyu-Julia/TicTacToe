@@ -1,20 +1,22 @@
 import java.util.Objects;
-import java.util.Scanner;
 
 public class TicTacToe {
+    private InteractionUser tictactoeUser;
+    private View view;
     public static final char EMPTY = ' ';
     //declare variables and create the instances using the new operator
     int size = 3;
-    Cell[][] board = new Cell[size][size];
+    private Cell[][] board;
     Player firstPlayer;
     Player secondPlayer;
     Player currentPlayer;
 
-    /**
-     * TicTacToe game board
-     * Initializing each cell in the constructor (or Init)
-     */
     public TicTacToe() {
+        tictactoeUser = new InteractionUser();
+        view = new View();
+
+        // Initializing TicTacToe game board
+        board = new Cell[size][size];
         for (int row = 0;  row< size; row++) {
             for (int col = 0; col < size; col++) {
                 board[row][col] = new Cell(row, col, EMPTY);
@@ -22,41 +24,17 @@ public class TicTacToe {
         }
     }
 
-    /**
-     * Update the board display after each player has put his pawn on the game board
-     */
-    /*public void display(Player currentPlayer) {
-        playTokenOnBoard(currentPlayer);
-        showBoard();
-    }*/
-
-    // Show the game board without pawns
-    private void showBoard() {
-        System.out.println("---".repeat(board.length));
-        for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board.length; col++) {
-                System.out.print("| " + board[row][col].getValue());
-            }
-            System.out.println("|");
-           // System.out.println("-".repeat(13));
-            System.out.println("---".repeat(board.length));
-        }
-    }
-
-    /**
-     * A function to verify that the line and the column chosen by the current player are authorized :
-     */
     private void playTokenOnBoard(Player currentPlayer) {
-        // row and column entries
+
 
         Cell move = currentPlayer.makeMove(board);
 
-        // entry control
+        // entry control, to verify that the line and the column chosen by the current player are authorized
         if (move.row >= 0 && move.row < board.length // row bounds check
                 && move.col >= 0 && move.col < board.length // col bounds check
                 && board[move.row][move.col].getValue() == EMPTY) {
-            System.out.print("1/ " + move.row + ", " + move.col + "\n");
-            putTokenOnBoard(move); // call the function setOwner and put the pawn on the game board according to the line and column chosen by the current player
+            System.out.print(move.row + ", " + move.col + "\n");
+            putTokenOnBoard(move); // Call the function to put the pawn
 
             return;
         }
@@ -71,20 +49,19 @@ public class TicTacToe {
      */
     public void putTokenOnBoard(Cell move) {
         board[move.row][move.col].setValue(move.getValue());
-        //board[move.row][move.col] = move;
     }
 
     // play the game
     public void play() {
-        showBoard();
-        //getChoicePlayer();
+        view.showBoard(board);
         setSymbolToPlayerChoice();
+
         /* change the player */
         currentPlayer = secondPlayer;
 
         do {
             playTokenOnBoard(currentPlayer);
-            showBoard();
+            view.showBoard(board);
 
             currentPlayer = (currentPlayer == firstPlayer) ? secondPlayer : firstPlayer;
 
@@ -95,15 +72,10 @@ public class TicTacToe {
             System.out.println("The game is over.");
         }
     }
-    // A function to choose players : two humans players, tow artificial players, or one human player and one artificial player
 
     public void setSymbolToPlayerChoice () {
-        Scanner inputPlayerChoice = new Scanner(System.in);
-        System.out.println("You can enter 1 for an artificial Player, or 2 for a human Player.");
-        System.out.println("Choose the first player");
-        int firstPlayerChoice = inputPlayerChoice.nextInt();
-        System.out.println("Choose the second player");
-        int secondPlayerChoice = inputPlayerChoice.nextInt();
+        int firstPlayerChoice = tictactoeUser.getPlayerChoice("first");
+        int secondPlayerChoice = tictactoeUser.getPlayerChoice("second");
 
         // choose the type of first player and set a symbol
             if (firstPlayerChoice == 1) {
@@ -152,7 +124,7 @@ public class TicTacToe {
             Cell[] line = testBoard[row];
             while (col < line.length && line[col] != null && !isWinner) {
                 // compare the 2 consecutive cell int the game board and check if they have the same pawn
-                if (/*line[col].getValue() != EMPTY ||*/ !Objects.equals(line[col].getValue(), line[col - 1].getValue())) {
+                if (!Objects.equals(line[col].getValue(), line[col - 1].getValue())) {
                     countSameSymbol = 1;
                 } else {
                     countSameSymbol++;
@@ -189,24 +161,15 @@ public class TicTacToe {
         Cell[][] testBoard = new Cell[2 * size - 1][size];
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
-//                if (i == j) {
-//                    testBoard[i][j] = board[i][j];
-//                }
+
                 if (row + col < size) testBoard[row][col] = this.board[size - 1 - col][row + col];
-                //else testBoard[row][col] = new Cell(row, col, testBoard[row][col].getValue());
                 else testBoard[row][col] = new Cell(row, col, EMPTY);
             }
         }
-//        for(int col =1; col <size; col++){
-//            for(int row =0; row < size; row++){
-//                if(col-row>=0) testBoard[row][col] = board[col-row][row];
-//                else testBoard[row][col] = new Cell();
-//            }
-//        }
+
         for (int row = 0; row < size - 1; row++) {
             for (int col = 0; col < size - 1; col++) {
                 if (row - col >= 0) testBoard[row + size][col] = this.board[row - col][col];
-                //else testBoard[size + row][col] = new Cell(row, col, testBoard[row][col].getValue());
                 else testBoard[size + row][col] = new Cell(row, col, EMPTY);
             }
         }
@@ -218,27 +181,16 @@ public class TicTacToe {
         Cell[][] testBoard = new Cell[2 * size - 1][size];
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
-//                if (row == col) {
-//                    testBoard[row][col] = board[row][col];
-//                }
                 if (row + col < size) testBoard[row][col] = board[col][col + row];
-               // else testBoard[row][col] = new Cell(row, col, testBoard[row][col].getValue());
                 else testBoard[row][col] = new Cell(row, col, EMPTY);
             }
         }
         for (int row = 1; row < size - 1; row++) {
             for (int col = 0; col < size; col++) {
                 if (row + col < size) testBoard[row + size][col] = board[row + col][col];
-                //else testBoard[row][col] = new Cell(row, col, testBoard[row][col].getValue());
                 else testBoard[row][col] = new Cell(row, col, EMPTY);
             }
         }
-//        for(int j =1; j < size; j++){
-//            for(int i =0; i < size; i++){
-//                if(i+j < size) testBoard[i][j] = board[i+j][j];
-//                else testBoard[i][j] = new Cell(i, j , testBoard[i][j].value());
-//            }
-//        }
         return isWinner(testBoard, nbSymbol);
     }
 
@@ -248,78 +200,6 @@ public class TicTacToe {
    private boolean hasWinner() {
         return isWinnerLine(3) || isWinnerColumn(3) || isWinnerDiagonalUp(3) || isWinnerDiagonalDown(3);
     }
-
-    /*public boolean isWinner() {
-        boolean hasWinner = false;
-        int nbLines = board.length;
-        int nbSymbols = 3; // The number of symbols is needed in a row to win the game.
-
-        for (int i = 0; i < nbLines; i++) {
-            Cell[] line = board[i]; // Get the current row
-
-            int count = 1; // Count from the first cell
-            for (int j = 1; j < line.length; j++) {
-                if (line[j].isOccupied() && Objects.equals(line[j].getRepCell(), line[j - 1].getRepCell())) {
-                    count++; // Increment count if the current cell matches the previous one
-                } else {
-
-                    count = 1;
-                }
-
-                if (count == nbSymbols) {
-                    hasWinner = true; // We found a winner
-                    break; // No need to check further in this row
-                }
-            }
-
-            if (hasWinner) {
-                break; // Exit the function if a winner has been found
-            }
-        }
-
-        return hasWinner;
-    }*/
-
-//            for (int j = 0; j < board.length; j++)
-//                if ((Objects.equals(board[0][j].getRepCell(), player1.getRepPlayer())) && (Objects.equals(board[1][j].getRepCell(), player1.getRepPlayer())) && Objects.equals(board[2][j].getRepCell(), player1.getRepPlayer())){
-//                    return true;
-//                }else if ((Objects.equals(board[0][j].getRepCell(), player2.getRepPlayer())) && (Objects.equals(board[1][j].getRepCell(), player2.getRepPlayer())) && Objects.equals(board[2][j].getRepCell(), player2.getRepPlayer())){
-//                    return true;
-//                }
-//        }
-//        return false;
-//    }
-
-   /* public boolean checkColumn() {
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board.length; j++)
-                if ((Objects.equals(board[i][0].getRepCell(), player1.getRepPlayer())) && (Objects.equals(board[i][1].getRepCell(), player1.getRepPlayer())) && Objects.equals(board[i][2].getRepCell(), player1.getRepPlayer())){
-                    return true;
-                }else if ((Objects.equals(board[i][0].getRepCell(), player2.getRepPlayer())) && (Objects.equals(board[i][1].getRepCell(), player2.getRepPlayer())) && Objects.equals(board[i][2].getRepCell(), player2.getRepPlayer())){
-                    return true;
-                }
-        }
-        return false;
-    }
-
-    public boolean checkDiagonalDown(){
-        if(Objects.equals(board[0][0].getRepCell(), player1.getRepPlayer()) && Objects.equals(board[1][1].getRepCell(), player1.getRepPlayer()) && Objects.equals(board[2][2].getRepCell(), player1.getRepPlayer())) {
-           return true;
-        } else if (Objects.equals(board[0][0].getRepCell(), player2.getRepPlayer()) && Objects.equals(board[1][1].getRepCell(), player2.getRepPlayer()) && Objects.equals(board[2][2].getRepCell(), player2.getRepPlayer())) {
-            return true;
-        }
-        return false;
-
-    }
-
-    public boolean checkDiagonalUp(){
-        if(Objects.equals(board[0][2].getRepCell(), player1.getRepPlayer()) && Objects.equals(board[1][1].getRepCell(), player1.getRepPlayer()) && Objects.equals(board[2][0].getRepCell(), player1.getRepPlayer())) {
-            return true;
-        } else if (Objects.equals(board[0][2].getRepCell(), player2.getRepPlayer()) && Objects.equals(board[1][1].getRepCell(), player2.getRepPlayer()) && Objects.equals(board[2][0].getRepCell(), player2.getRepPlayer())) {
-            return true;
-        }
-        return false;
-    }*/
 
     /**
      * Condition to stop the game when there is a winner or the game board is full
