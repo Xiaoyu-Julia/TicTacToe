@@ -30,9 +30,12 @@ public class View {
     }
 
 
-    public void showEndOfGame(){
-        System.out.println("The game is over.");
+    public void showWinner(){
+        System.out.println("The game is over. There is a winner.");
     }
 
+    public void showTieMatch() {
+        System.out.println("The game is over. There is a tie.");
+    }
 
 }

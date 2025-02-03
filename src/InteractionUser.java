@@ -32,9 +32,9 @@ public class InteractionUser {
     // A function to choose players : two humans players, tow artificial players, or one human player and one artificial player
     public int getPlayerChoice(String str) {
         view.showIndicationMessageForPlayerChoice(str);
-        while (!inputUser.hasNextInt()) {
+        while (!inputPlayerChoice.hasNextInt()) {
             view.showErrorMessageForUserInputEtPlayerChoice();
-            inputUser.nextLine(); // vidage saisie incorrect
+            inputPlayerChoice.nextLine(); // vidage saisie incorrect
         }
         return inputPlayerChoice.nextInt();
     }
@@ -47,6 +47,23 @@ public class InteractionUser {
     public void closeScanner() {
         inputUser.close();
         inputPlayerChoice.close();
+
+    }
+
+    /**
+     * A function to check if there is a winner or the game board is full.
+     */
+    public boolean isOver() {
+        boolean isOver = false;
+        if (hasWinner()) {
+            isOver = true;
+            view.showWinner();
+        } else if (isCaseFull()) {
+            isOver = true;
+            view.showTieMatch();
+
+        }
+        return isOver;
 
     }
 }

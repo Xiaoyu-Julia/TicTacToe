@@ -67,9 +67,7 @@ public class TicTacToe {
         } while (!hasWinner() && !isCaseFull());
 
         boolean statusGame = isOver();
-        if (statusGame) {
-            view.showEndOfGame();
-        }
+
     }
 
     public void setSymbolToPlayerChoice () {
@@ -200,12 +198,17 @@ public class TicTacToe {
     }
 
     /**
-     * Condition to stop the game when there is a winner or the game board is full
+     * A function to check if there is a winner or the game board is full.
      */
     public boolean isOver() {
         boolean isOver = false;
-        if (hasWinner() || isCaseFull()) {
+        if (hasWinner()) {
             isOver = true;
+            view.showWinner();
+        } else if (isCaseFull()) {
+            isOver = true;
+            view.showTieMatch();
+
         }
         return isOver;
 
