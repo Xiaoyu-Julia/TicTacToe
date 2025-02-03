@@ -8,11 +8,11 @@ public class ArtificialPlayer extends Player {
 
     @Override
 
-    public Cell makeMove(Cell[][] board) {
+    public Board makeMove(Board[][] board) {
         //Random random = new Random();
         int randomRow = new Random().nextInt(0, board.length);
         int randomCol = new Random().nextInt(0, board[0].length);
 
-        return new Cell(randomRow, randomCol, symbol);
+        return new Board(randomRow, randomCol, symbol);
     }
 }

@@ -10,13 +10,13 @@ public class HumanPlayer extends Player {
 
 
     @Override
-    public Cell makeMove(Cell[][] board) {
+    public Board makeMove(Board[][] board) {
         // row and column entries
         int row, col;
         row = tictactoeUser.getUserInput("line");
         col = tictactoeUser.getUserInput("column");
 
-        return new Cell(row, col, symbol);
+        return new Board(row, col, symbol);
 
     }
 

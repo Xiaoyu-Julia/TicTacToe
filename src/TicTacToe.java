@@ -5,8 +5,8 @@ public class TicTacToe {
     private View view;
     public static final char EMPTY = ' ';
     //declare variables and create the instances using the new operator
-    int size = 3;
-    private Cell[][] board;
+    int boardSize = 3;
+    private Board[][] board;
     Player firstPlayer;
     Player secondPlayer;
     Player currentPlayer;
@@ -16,10 +16,10 @@ public class TicTacToe {
         view = new View();
 
         // Initializing TicTacToe game board
-        board = new Cell[size][size];
-        for (int row = 0;  row< size; row++) {
-            for (int col = 0; col < size; col++) {
-                board[row][col] = new Cell(row, col, EMPTY);
+        board = new Board[boardSize][boardSize];
+        for (int row = 0; row< boardSize; row++) {
+            for (int col = 0; col < boardSize; col++) {
+                board[row][col] = new Board(row, col, EMPTY);
             }
         }
     }
@@ -27,19 +27,18 @@ public class TicTacToe {
     private void playTokenOnBoard(Player currentPlayer) {
 
 
-        Cell move = currentPlayer.makeMove(board);
+        Board move = currentPlayer.makeMove(board);
 
         // entry control, to verify that the line and the column chosen by the current player are authorized
         if (move.row >= 0 && move.row < board.length // row bounds check
                 && move.col >= 0 && move.col < board.length // col bounds check
                 && board[move.row][move.col].getValue() == EMPTY) {
-            System.out.print(move.row + ", " + move.col + "\n");
+            //System.out.print(move.row + ", " + move.col + "\n");
             putTokenOnBoard(move); // Call the function to put the pawn
 
             return;
         }
-
-        System.out.print("There is a pawn here or you have chosen a square that is off the board. Please change your choice: line [0, 2], column [0, 2].");
+        view.showErrorMessageForEntryControl();
         playTokenOnBoard(currentPlayer);
 
     }
@@ -47,7 +46,7 @@ public class TicTacToe {
     /**
      * A function : put the pawn on the game board according to the line and column chosen by the current player
      */
-    public void putTokenOnBoard(Cell move) {
+    public void putTokenOnBoard(Board move) {
         board[move.row][move.col].setValue(move.getValue());
     }
 
@@ -67,9 +66,9 @@ public class TicTacToe {
 
         } while (!hasWinner() && !isCaseFull());
 
-        boolean startGame = isOver();
-        if (startGame) {
-            System.out.println("The game is over.");
+        boolean statusGame = isOver();
+        if (statusGame) {
+            view.showEndOfGame();
         }
     }
 
@@ -78,17 +77,17 @@ public class TicTacToe {
         int secondPlayerChoice = tictactoeUser.getPlayerChoice("second");
 
         // choose the type of first player and set a symbol
-            if (firstPlayerChoice == 1) {
-                firstPlayer = new ArtificialPlayer('O');
-            }else{
-                firstPlayer = new HumanPlayer('0');
-            }
+        if (firstPlayerChoice == 1) {
+            firstPlayer = new ArtificialPlayer('O');
+        }else{
+            firstPlayer = new HumanPlayer('0');
+        }
 
-            if (secondPlayerChoice == 2) {
-                secondPlayer = new HumanPlayer('x');
-            }else{
-                secondPlayer = new ArtificialPlayer('X');
-            }
+        if (secondPlayerChoice == 2) {
+            secondPlayer = new HumanPlayer('x');
+        }else{
+            secondPlayer = new ArtificialPlayer('X');
+        }
 
     }
 
@@ -109,11 +108,10 @@ public class TicTacToe {
     /**
      * Check if there is a winner in the row, in the column and in the diagonal
      *
-     * @param testBoard
      * @param nbSymbol  number of winning symbols needed
      * @return the result of the check is stored in the variable isWinner
      */
-   private boolean isWinner(Cell[][] testBoard, int nbSymbol) {
+    private boolean isWinner(Board[][] testBoard, int nbSymbol) {
         boolean isWinner = false;
         int row = 0;
         int nbLines = testBoard.length;
@@ -121,7 +119,7 @@ public class TicTacToe {
             // initialize a counter
             int countSameSymbol = 1;
             int col = 1;
-            Cell[] line = testBoard[row];
+            Board[] line = testBoard[row];
             while (col < line.length && line[col] != null && !isWinner) {
                 // compare the 2 consecutive cell int the game board and check if they have the same pawn
                 if (!Objects.equals(line[col].getValue(), line[col - 1].getValue())) {
@@ -147,9 +145,9 @@ public class TicTacToe {
 
     // Check if there is a winner in the column
     private boolean isWinnerColumn(int nbSymbol) {
-        Cell[][] testBoard = new Cell[size][size];
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
+        Board[][] testBoard = new Board[boardSize][boardSize];
+        for (int row = 0; row < boardSize; row++) {
+            for (int col = 0; col < boardSize; col++) {
                 testBoard[col][row] = board[row][col];
             }
         }
@@ -158,19 +156,19 @@ public class TicTacToe {
 
     //Check if there is a winner in the rising diagonal
     private boolean isWinnerDiagonalUp(int nbSymbol) {
-        Cell[][] testBoard = new Cell[2 * size - 1][size];
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
+        Board[][] testBoard = new Board[2 * boardSize - 1][boardSize];
+        for (int row = 0; row < boardSize; row++) {
+            for (int col = 0; col < boardSize; col++) {
 
-                if (row + col < size) testBoard[row][col] = this.board[size - 1 - col][row + col];
-                else testBoard[row][col] = new Cell(row, col, EMPTY);
+                if (row + col < boardSize) testBoard[row][col] = this.board[boardSize - 1 - col][row + col];
+                else testBoard[row][col] = new Board(row, col, EMPTY);
             }
         }
 
-        for (int row = 0; row < size - 1; row++) {
-            for (int col = 0; col < size - 1; col++) {
-                if (row - col >= 0) testBoard[row + size][col] = this.board[row - col][col];
-                else testBoard[size + row][col] = new Cell(row, col, EMPTY);
+        for (int row = 0; row < boardSize - 1; row++) {
+            for (int col = 0; col < boardSize - 1; col++) {
+                if (row - col >= 0) testBoard[row + boardSize][col] = this.board[row - col][col];
+                else testBoard[boardSize + row][col] = new Board(row, col, EMPTY);
             }
         }
         return isWinner(testBoard, nbSymbol);
@@ -178,17 +176,17 @@ public class TicTacToe {
 
     //Check if there is a winner in the descending diagonal
     private boolean isWinnerDiagonalDown(int nbSymbol) {
-        Cell[][] testBoard = new Cell[2 * size - 1][size];
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
-                if (row + col < size) testBoard[row][col] = board[col][col + row];
-                else testBoard[row][col] = new Cell(row, col, EMPTY);
+        Board[][] testBoard = new Board[2 * boardSize - 1][boardSize];
+        for (int row = 0; row < boardSize; row++) {
+            for (int col = 0; col < boardSize; col++) {
+                if (row + col < boardSize) testBoard[row][col] = board[col][col + row];
+                else testBoard[row][col] = new Board(row, col, EMPTY);
             }
         }
-        for (int row = 1; row < size - 1; row++) {
-            for (int col = 0; col < size; col++) {
-                if (row + col < size) testBoard[row + size][col] = board[row + col][col];
-                else testBoard[row][col] = new Cell(row, col, EMPTY);
+        for (int row = 1; row < boardSize - 1; row++) {
+            for (int col = 0; col < boardSize; col++) {
+                if (row + col < boardSize) testBoard[row + boardSize][col] = board[row + col][col];
+                else testBoard[row][col] = new Board(row, col, EMPTY);
             }
         }
         return isWinner(testBoard, nbSymbol);
@@ -197,7 +195,7 @@ public class TicTacToe {
     /**
      * Condition to stop the game when there is a winner
      */
-   private boolean hasWinner() {
+    private boolean hasWinner() {
         return isWinnerLine(3) || isWinnerColumn(3) || isWinnerDiagonalUp(3) || isWinnerDiagonalDown(3);
     }
 

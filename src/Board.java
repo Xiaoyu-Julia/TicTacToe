@@ -1,9 +1,9 @@
-public class Cell {
+public class Board {
     private char value = TicTacToe.EMPTY;
     int row;
     int col;
 
-    public Cell(int row, int col, char value) {
+    public Board(int row, int col, char value) {
         this.row = row;
         this.col = col;
         this.value = value;

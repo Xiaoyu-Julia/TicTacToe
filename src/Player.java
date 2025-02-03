@@ -6,7 +6,7 @@ public abstract class Player {
         this.symbol = symbol;
     };
 
-    public abstract Cell makeMove(Cell[][] board);
+    public abstract Board makeMove(Board[][] board);
 
 }
 
