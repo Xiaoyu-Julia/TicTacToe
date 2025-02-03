@@ -49,21 +49,4 @@ public class InteractionUser {
         inputPlayerChoice.close();
 
     }
-
-    /**
-     * A function to check if there is a winner or the game board is full.
-     */
-    public boolean isOver() {
-        boolean isOver = false;
-        if (hasWinner()) {
-            isOver = true;
-            view.showWinner();
-        } else if (isCaseFull()) {
-            isOver = true;
-            view.showTieMatch();
-
-        }
-        return isOver;
-
-    }
 }

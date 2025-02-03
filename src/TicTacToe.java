@@ -1,6 +1,6 @@
 import java.util.Objects;
 
-public class TicTacToe {
+public class TicTacToe extends BoardGame {
     private InteractionUser tictactoeUser;
     private View view;
     public static final char EMPTY = ' ';
@@ -24,7 +24,8 @@ public class TicTacToe {
         }
     }
 
-    private void playTokenOnBoard(Player currentPlayer) {
+    @Override
+    public void playTokenOnBoard(Player currentPlayer) {
 
 
         Board move = currentPlayer.makeMove(board);
