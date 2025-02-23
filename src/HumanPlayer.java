@@ -1,11 +1,11 @@
 
 public class HumanPlayer extends Player {
-    InteractionUser tictactoeUser;
+    InteractionUserController tictactoeUser;
 
 
     HumanPlayer(char symbol) {
         super(symbol); // access attribute défined in the parent class
-        tictactoeUser = new InteractionUser();
+        tictactoeUser = new InteractionUserController();
     }
 
 

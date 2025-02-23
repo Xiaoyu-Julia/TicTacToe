@@ -1,16 +1,13 @@
 import java.util.Objects;
 
-public class TicTacToe extends BoardGame {
-    private InteractionUserController tictactoeUser;
+public class Gomoku extends BoardGame {
+
+    InteractionUserController gomokuUser;
     private View view;
-    //public static final char EMPTY = ' ';
-    //declare variables and create the instances using the new operator
 
-
-    public TicTacToe(int boardSize) {
+    public Gomoku(int boardSize) {
         super(boardSize);
-
-        tictactoeUser = new InteractionUserController();
+        gomokuUser = new InteractionUserController();
         view = new View();
     }
 
@@ -42,8 +39,8 @@ public class TicTacToe extends BoardGame {
         board[move.row][move.col].setValue(move.getValue());
     }
 
-    // play the game
     @Override
+    // play the game
     public void play() {
         view.showBoard(board);
         setSymbolToPlayerChoice();
@@ -66,13 +63,13 @@ public class TicTacToe extends BoardGame {
         } while (!hasWinner() && !isCaseFull());
 
         isOver();
-        tictactoeUser.closeScanner();
+        gomokuUser.closeScanner();
     }
 
     @Override
     public void setSymbolToPlayerChoice () {
-        int firstPlayerChoice = tictactoeUser.getPlayerChoice("first");
-        int secondPlayerChoice = tictactoeUser.getPlayerChoice("second");
+        int firstPlayerChoice = gomokuUser.getPlayerChoice("first");
+        int secondPlayerChoice = gomokuUser.getPlayerChoice("second");
 
         // choose the type of first player and set a symbol
         if (firstPlayerChoice == 1) {
@@ -214,4 +211,5 @@ public class TicTacToe extends BoardGame {
         }
         return isOver;
     }
+
 }

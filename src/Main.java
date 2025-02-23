@@ -2,7 +2,9 @@
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        TicTacToe ticTacToe = new TicTacToe();
+        TicTacToe ticTacToe = new TicTacToe(3);
         ticTacToe.play();
+//        Gomoku gomoku = new Gomoku(15);
+//        gomoku.play();
     }
 }
